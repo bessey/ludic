@@ -237,6 +237,7 @@ class BaseElement(metaclass=ABCMeta):
         return self
 
 
+
 NoChildren: TypeAlias = Never
 """Type alias for elements that are not allowed to have children."""
 
@@ -288,6 +289,10 @@ class Element(Generic[TChildren, TAttrs], BaseElement):
         self.attrs = cast(TAttrs, attributes)
         self.children = tuple(self.formatter.extract(*children))
 
+    def __getitem__(self, children: TChildren) -> "Element":
+        children = tuple([children]) if isinstance(children, str) else children
+        self.children = tuple(self.formatter.extract(*children))
+        return self
 
 class ElementStrict(Generic[*TChildrenArgs, TAttrs], BaseElement):
     """Base class for strict elements (elements with concrete types of children).
@@ -309,6 +314,10 @@ class ElementStrict(Generic[*TChildrenArgs, TAttrs], BaseElement):
         self.attrs = cast(TAttrs, attrs)
         self.children = tuple(self.formatter.extract(*children))
 
+    def __getitem__(self, children: tuple[*TChildrenArgs]) -> "Element":
+        children = tuple([children]) if isinstance(children, str) else children
+        self.children = tuple(self.formatter.extract(*children))
+        return self
 
 class Blank(Element[TChildren, NoAttrs]):
     """Element representing no element at all, just children.
