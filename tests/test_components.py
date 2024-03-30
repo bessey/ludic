@@ -4,7 +4,7 @@ from ludic.html import b
 
 
 def test_link() -> None:
-    link = Link("A link!", to="https://example.com")
+    link = Link(to="https://example.com")["A link!"]
     assert link.to_html() == '<a href="https://example.com">A link!</a>'
 
 
@@ -13,7 +13,7 @@ def test_paragraph() -> None:
         "Hello, how ",
         b("are you"),
         "? Click ",
-        Link("here", to="https://example.com"),
+        Link(to="https://example.com")["here"],
         ".",
     )
     assert isinstance(paragraph.children[3], Link)
@@ -29,11 +29,10 @@ def test_paragraph() -> None:
 
 
 def test_navigation() -> None:
-    navigation = Navigation(
+    navigation = Navigation(id="nav")[
         NavItem("Home", to="/"),
         NavItem("About", to="/about"),
-        id="nav",
-    )
+    ]
     assert navigation.to_html() == (
         '<ul class="navigation" id="nav">'
             '<li id="home"><a href="/">Home</a></li>'
